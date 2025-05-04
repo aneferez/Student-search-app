@@ -61,9 +61,26 @@ const styles = {
     paddingTop: 10,
   },
   studentItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: '6px 10px',
     borderBottom: '1px solid #eee',
     fontSize: 15,
+  },
+  deleteButton: {
+    backgroundColor: '#e63946',
+    border: 'none',
+    color: 'white',
+    borderRadius: 8,
+    padding: '4px 12px',
+    cursor: 'pointer',
+    fontWeight: 600,
+    fontSize: 14,
+    transition: 'background-color 0.25s ease',
+  },
+  deleteButtonHover: {
+    backgroundColor: '#b82834',
   },
   modalOverlay: {
     position: 'fixed',
@@ -132,7 +149,7 @@ function StudentSearchApp() {
   const linearSearch = (array, target) => {
     const start = performance.now();
     let index = -1;
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i< array.length; i++) {
       if (array[i].name.toLowerCase() === target.toLowerCase()) {
         index = i;
         break;
@@ -149,13 +166,13 @@ function StudentSearchApp() {
     let high = array.length - 1;
     let index = -1;
     const targetLower = target.toLowerCase();
-    while (low <= high) {
+    while (low<= high) {
       let mid = Math.floor((low + high) / 2);
       let midName = array[mid].name.toLowerCase();
       if (midName === targetLower) {
         index = mid;
         break;
-      } else if (midName < targetLower) {
+      } else if (midName< targetLower) {
         low = mid + 1;
       } else {
         high = mid - 1;
@@ -235,6 +252,10 @@ function StudentSearchApp() {
     setNewStudentName("");
   };
 
+  const handleDeleteStudent = (id) => {
+    setStudents(prev => prev.filter(s => s.id !== id));
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Student Search App</h1>
@@ -301,7 +322,17 @@ function StudentSearchApp() {
       <div style={styles.studentList} aria-label="List of students">
         {students.map((student, idx) => (
           <div key={student.id} style={styles.studentItem}>
-            {idx + 1}. {student.name}
+            <span>{idx + 1}. {student.name}</span>
+            <button 
+              style={styles.deleteButton}
+              onClick={() => handleDeleteStudent(student.id)}
+              aria-label={`Delete ${student.name}`}
+              title={`Delete ${student.name}`}
+              onMouseOver={e => e.currentTarget.style.backgroundColor = '#b82834'}
+              onMouseOut={e => e.currentTarget.style.backgroundColor = '#e63946'}
+            >
+              Delete
+            </button>
           </div>
         ))}
       </div>
@@ -343,4 +374,3 @@ function StudentSearchApp() {
 }
 
 export default StudentSearchApp;
-
